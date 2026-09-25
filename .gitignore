@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+.gradle/
+build/
+*.keystore
+*.jks
+*.p12
+*.mobileprovision
+*.ipa
+*.aab
+careeros.db
+__pycache__/
+.pytest_cache/

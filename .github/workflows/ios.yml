@@ -1,0 +1,21 @@
+name: iOS Archive
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  build:
+    runs-on: macos-latest
+    defaults: {run: {working-directory: mobile}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm, cache-dependency-path: mobile/package-lock.json}
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - run: npx cap add ios
+      - run: npx cap sync ios
+      - name: Build simulator app
+        run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphonesimulator -derivedDataPath build CODE_SIGNING_ALLOWED=NO
+      - uses: actions/upload-artifact@v4
+        with: {name: careeros-ios-simulator-app, path: mobile/build/Build/Products/Release-iphonesimulator/App.app}
